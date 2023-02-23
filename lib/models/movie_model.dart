@@ -36,6 +36,7 @@ class Movie {
 
   String? heroId;
 
+  //Get the full url and null safety of the  poster image
   get fullPosterUrl{
     if(posterPath != null) {
       return 'https://image.tmdb.org/t/p/w500$posterPath';
@@ -44,9 +45,10 @@ class Movie {
     return 'https://i.stack.imgur.com/GNhx0.png';
   }
 
+  //Get the full url and null safety of the backdrop image
   get fullBackdropPath {
     if ( backdropPath != null ) {
-      return 'https://image.tmdb.org/t/p/w500$backdropPath ';
+      return 'https://image.tmdb.org/t/p/w500$backdropPath';
     }
 
     return 'https://i.stack.imgur.com/GNhxO.png';
