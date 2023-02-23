@@ -5,12 +5,10 @@ import 'package:fl_movies_app/models/now_playing_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/movie_model.dart';
-
 class MoviesProvider extends ChangeNotifier {
-  String _apiKey = '452078a8d5266efd51d6dbbb47528b11';
-  String _baseUrl = 'api.themoviedb.org';
-  String _language = 'es-MX';
+  final String _apiKey = '452078a8d5266efd51d6dbbb47528b11';
+  final String _baseUrl = 'api.themoviedb.org';
+  final String _language = 'es-MX';
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
@@ -58,7 +56,12 @@ class MoviesProvider extends ChangeNotifier {
     final popularResponse = PopularResponse.fromJson(jsonDecode(jsonData));
 
     //Esta linea de abajo indica que se agregaran las peliculas al final del contenido actual de la lista
-    popularMovies = [...popularMovies, ...popularResponse.results];
+    popularMovies = [ ...popularMovies, ...popularResponse.results ];
+
+    if (kDebugMode) {
+      print(popularMovies);
+    }
+
     notifyListeners();
   }
 

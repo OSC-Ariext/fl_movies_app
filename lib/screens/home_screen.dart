@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+
+  const HomeScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
 
     final moviesProvider = Provider.of<MoviesProvider>(context);
-    
-    print(moviesProvider.onDisplayMovies);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,8 +31,9 @@ class HomeScreen extends StatelessWidget {
             CardSwiper(movies: moviesProvider.onDisplayMovies),
             //Movie slider
             MovieSlider(
-              movieList: moviesProvider.popularMovies,
+              movies: moviesProvider.popularMovies,
               title: 'Populares',
+              onNextPage: () => moviesProvider.getPopularMovies(),
             )
           ],
         ),
