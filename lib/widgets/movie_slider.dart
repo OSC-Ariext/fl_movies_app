@@ -1,32 +1,42 @@
+import 'package:fl_movies_app/models/models.dart';
 import 'package:flutter/material.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({Key? key}) : super(key: key);
+
+  final String? title;
+  final List<Movie> movieList;
+
+  const MovieSlider({
+    Key? key,
+    this.title,
+    required this.movieList
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 260,
       //color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Populares',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          if(title != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                title!,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
 
           const SizedBox(height: 5,),
 
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-                itemCount: 20,
-                itemBuilder: (_, int index) => _MoviePoster()
+                itemCount: movieList.length,
+                itemBuilder: (_, int index) => _MoviePoster(movieInfo: movieList[index],)
             ),
           )
         ],
@@ -35,7 +45,16 @@ class MovieSlider extends StatelessWidget {
   }
 }
 
+//Elementos de la lista de posters
 class _MoviePoster extends StatelessWidget {
+
+  final Movie movieInfo;
+
+  const _MoviePoster({
+    Key? key,
+    required this.movieInfo
+  }): super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,9 +69,9 @@ class _MoviePoster extends StatelessWidget {
             onTap: () => Navigator.pushNamed(context, 'details', arguments: 'movie-instance'),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://via.placeholder.com/300x400'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movieInfo.fullPosterUrl),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -62,8 +81,8 @@ class _MoviePoster extends StatelessWidget {
 
           const SizedBox(height: 5,),
 
-          const Text(
-            'Starwars: El regreso del Hamster Espacial, el Alien y el Burrito',
+          Text(
+            movieInfo.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,

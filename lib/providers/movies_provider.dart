@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:fl_movies_app/models/models.dart';
 import 'package:fl_movies_app/models/now_playing_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/movie_model.dart';
 
 class MoviesProvider extends ChangeNotifier {
   String _apiKey = '452078a8d5266efd51d6dbbb47528b11';
@@ -10,27 +13,53 @@ class MoviesProvider extends ChangeNotifier {
   String _language = 'es-MX';
 
   List<Movie> onDisplayMovies = [];
+  List<Movie> popularMovies = [];
+
+  int _popularPage = 0;
 
   MoviesProvider() {
     if (kDebugMode) {
-      print('Initialization');
+      print('MoviesProvider inicializado');
     }
 
     getOnDisplayMovies();
+    getPopularMovies();
+  }
+
+  //Aqui colocamos los elementos de la petición para reutilizarlo cuando sea necesario
+  //El parametro entre [] es opcional.
+  
+  Future<String> _getJsonData(String endpoint, [int page = 1]) async{
+    var url = Uri.https(_baseUrl, endpoint, {
+      'api_key': _apiKey,
+      'language': _language,
+      'page': '$page'
+    });
+
+    final response = await http.get(url);
+    return response.body;
   }
 
   getOnDisplayMovies() async {
-    var url = Uri.https(_baseUrl, '3/movie/now_playing', {
-      'api_key': _apiKey,
-      'language': _language,
-      'page': '1'
-    });
     
-    final response = await http.get(url);
-    final nowPlayingResponse = NowPlayingRep.fromJson(jsonDecode(response.body));
+    final jsonData = await _getJsonData('3/movie/now_playing');
+    final nowPlayingResponse = NowPlayingRep.fromJson(jsonDecode(jsonData));
 
     onDisplayMovies = nowPlayingResponse.results;
 
     notifyListeners();
   }
+
+  getPopularMovies() async {
+
+    _popularPage++;
+
+    final jsonData = await _getJsonData('3/movie/popular', _popularPage);
+    final popularResponse = PopularResponse.fromJson(jsonDecode(jsonData));
+
+    //Esta linea de abajo indica que se agregaran las peliculas al final del contenido actual de la lista
+    popularMovies = [...popularMovies, ...popularResponse.results];
+    notifyListeners();
+  }
+
 }

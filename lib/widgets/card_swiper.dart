@@ -3,6 +3,8 @@ import 'package:fl_movies_app/models/now_playing_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/movie_model.dart';
+
 class CardSwiper extends StatelessWidget {
 
   final List<Movie> movies;
@@ -15,6 +17,14 @@ class CardSwiper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    if(movies.isEmpty){
+      return SizedBox(
+        width: double.infinity,
+        height: size.height *0.5,
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return SizedBox(
       width: double.infinity,
