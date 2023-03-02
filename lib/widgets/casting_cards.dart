@@ -38,7 +38,7 @@ class CastingCards extends StatelessWidget {
             height: 180,
             //color: Colors.red,
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: cast.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index){
                 return _CastCard( actor: cast[index],);
