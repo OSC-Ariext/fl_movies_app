@@ -69,7 +69,9 @@ class _MovieSliderState extends State<MovieSlider> {
                 controller: scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.movies.length,
-                itemBuilder: (_, int index) => _MoviePoster(movieInfo: widget.movies[index],)
+                itemBuilder: (_, int index) => _MoviePoster(
+                  movieInfo: widget.movies[index],
+                  heroId: '${widget.title}-$index-${widget.movies[index].id}',)
             ),
           )
         ],
@@ -82,14 +84,19 @@ class _MovieSliderState extends State<MovieSlider> {
 class _MoviePoster extends StatelessWidget {
 
   final Movie movieInfo;
+  final String heroId;
 
   const _MoviePoster({
     Key? key,
-    required this.movieInfo
+    required this.movieInfo,
+    required this.heroId,
   }): super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    movieInfo.heroId = heroId;
+
     return Container(
       width: 130,
       height: 190,
@@ -105,14 +112,17 @@ class _MoviePoster extends StatelessWidget {
                 arguments: movieInfo
             ),
 
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(movieInfo.fullPosterUrl),
-                width: 130,
-                height: 190,
-                fit: BoxFit.cover,
+            child: Hero(
+              tag: movieInfo.heroId!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(movieInfo.fullPosterUrl),
+                  width: 130,
+                  height: 190,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
